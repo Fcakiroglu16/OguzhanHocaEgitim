@@ -1,4 +1,4 @@
-﻿namespace OguzhanHocaEgitim.Models.Services
+﻿namespace Applications.Products.Create
 {
     public class CreateProductRequest
     {

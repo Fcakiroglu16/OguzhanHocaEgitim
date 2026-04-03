@@ -2,6 +2,10 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//N-Layer
+//Clean Architecture-Onion Architecture
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();

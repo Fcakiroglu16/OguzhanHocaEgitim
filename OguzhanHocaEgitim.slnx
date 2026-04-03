@@ -1,3 +1,7 @@
 <Solution>
-  <Project Path="OguzhanHocaEgitim/OguzhanHocaEgitim.csproj" />
+  <Project Path="Applications/Applications.csproj" Id="04f926db-74d7-4557-97ed-89b67594342e" />
+  <Project Path="Domains/Domains.csproj" Id="888aad62-6277-4b3a-97f2-6205f60c44af" />
+  <Project Path="Infrastructures/Infrastructures.csproj" Id="ef8df0f6-985f-4670-b9a8-259c93db9f50" />
+  <Project Path="OguzhanHocaEgitim/Presentation.API.csproj" />
+  <Project Path="Persistences/Persistences.csproj" Id="4116f9a2-b8c2-4deb-bf20-56493b135bd0" />
 </Solution>

@@ -1,4 +1,4 @@
-﻿namespace OguzhanHocaEgitim.Models.Repositories
+﻿namespace OguzhanHocaEgitim.Domains
 {
     public class Product
     {
