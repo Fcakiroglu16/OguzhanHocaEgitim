@@ -1,6 +1,4 @@
 ﻿namespace Applications.Products.Create
 {
-    public class CreateProductRequest
-    {
-    }
+    public record CreateProductRequest(string Name, decimal Price);
 }

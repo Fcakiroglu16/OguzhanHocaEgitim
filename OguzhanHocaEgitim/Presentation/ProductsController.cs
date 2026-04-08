@@ -1,76 +1,45 @@
 ﻿using System.Net;
-using Applications;
 using Applications.Products;
-using Microsoft.AspNetCore.Http;
+using Applications.Products.Create;
+using Applications.Products.Update;
 using Microsoft.AspNetCore.Mvc;
-using OguzhanHocaEgitim.ApplicationsServices;
 
-namespace OguzhanHocaEgitim.Controllers
+namespace Presentation.API.Presentation
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController(IProductService productService) : ControllerBase
+    public class ProductsController(IProductService productService) : CustomBaseController
     {
         [HttpGet]
-        public IActionResult GetProducts()
+        public IActionResult GetProducts() => CreateActionResult(productService.GetAll());
+
+        [HttpGet]
+        public IActionResult GetProductById(int id)
         {
-            var result = productService.GetProducts();
-
-
-            if (result.StatusCode == HttpStatusCode.NoContent)
-            {
-                return new ObjectResult(null)
-                {
-                    StatusCode = result.StatusCode.GetHashCode()
-                };
-            }
-
-            if (result.IsSuccess)
-            {
-                return new ObjectResult(result.Data)
-                {
-                    StatusCode = result.StatusCode.GetHashCode()
-                };
-            }
-
-
-            return new ObjectResult(result.Errors)
-                    {
-                        StatusCode = result.StatusCode.GetHashCode()
-                    };
+            return CreateActionResult(productService.GetById(id));
         }
 
         //[HttpGet]
-        //public IActionResult GetProductsWithPaged()
+        //public IActionResult UpdateProductName(int page, int pageSize)
         //{
-        //    return Ok("products");
+        //    return CreateActionResult(productService.GetAllByPaged(page, pageSize));
         //}
 
 
         [HttpPost]
-        public IActionResult CreateProduct()
+        public IActionResult CreateProduct(CreateProductRequest request)
         {
-            // 200 OK => İstek başarılı oldu ve sonuç döndürüldü.
-            // 201 Created => Yeni bir kaynak oluşturuldu.
-            return Created(new Uri("https://products"), null);
+            return CreateActionResult(productService.Create(request));
         }
 
         [HttpPut]
-        public IActionResult UpdateProduct()
+        public IActionResult UpdateProduct(UpdateProductRequest request)
         {
-            return NoContent();
+            return CreateActionResult(productService.Update(request));
         }
 
         [HttpDelete]
-        public IActionResult DeleteProduct()
+        public IActionResult DeleteProduct(int id)
         {
-            return NoContent();
-        }
-
-        [HttpPatch]
-        public IActionResult UpdateProductName()
-        {
-            return NoContent();
+            return CreateActionResult(productService.Delete(id));
         }
     }
 }
