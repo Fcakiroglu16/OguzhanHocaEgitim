@@ -1,5 +1,8 @@
 using Applications.Products;
+using Applications.Products.Create;
+using Microsoft.AspNetCore.Mvc;
 using Persistences.Repositories;
+using Presentation.API.Endpoints.Products;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +36,10 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+
+app.AddProductEndpoints();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

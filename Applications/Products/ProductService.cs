@@ -106,7 +106,7 @@ namespace Applications.Products
             var newProduct = new Product()
             {
                 Name = request.Name,
-                Price = request.Price,
+                Price = request.Price!.Value,
                 Barcode = GenerateBarcode()
             };
 
