@@ -2,32 +2,16 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Applications
 {
-    //public class ProductDto
-
-    //{
-    //    public int? Count { get; set; } // values types => int,double,dateTime,bool,etc
-
-    //    public string Name { get; set; } =
-    //        null!; //reference types => string, class, interface, array, list,delegate,event ,record
-
-    //    public ProductDto()
-    //    {
-    //        Name = null;
-
-    //        if (Count.HasValue)
-    //        {
-    //            var x = Count.Value;
-    //        }
-    //    }
-    //}
+}
 
 
-    public class ServiceResult
-    {
+public class ServiceResult
+{
         public HttpStatusCode StatusCode { get; set; }
         public ProblemDetails? ProblemDetails { get; set; }
 
@@ -116,4 +100,28 @@ namespace Applications
             };
         }
     }
-}
+
+
+    public static class ServiceResultExtensions
+    {
+        public static IResult ToActionResult<T>(this ServiceResult<T> serviceResult)
+        {
+            return serviceResult.StatusCode switch
+            {
+                HttpStatusCode.OK => Results.Ok(serviceResult.Data),
+                HttpStatusCode.Created => Results.Created(string.Empty, serviceResult.Data),
+                HttpStatusCode.NoContent => Results.NoContent(),
+                _ => Results.Problem(serviceResult.ProblemDetails!)
+            };
+        }
+
+
+        public static IResult ToActionResult(this ServiceResult serviceResult)
+        {
+            return serviceResult.StatusCode switch
+            {
+                HttpStatusCode.NoContent => Results.NoContent(),
+                _ => Results.Problem(serviceResult.ProblemDetails!)
+            };
+        }
+    }

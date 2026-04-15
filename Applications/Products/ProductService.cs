@@ -3,10 +3,14 @@ using Applications.Products.Create;
 using Applications.Products.Dto;
 using Applications.Products.Update;
 using Domains;
+using FluentValidation;
 
 namespace Applications.Products
 {
-    public class ProductService(IProductRepository productRepository, TaxCalculate taxCalculate) : IProductService
+    public class ProductService(
+        IProductRepository productRepository,
+        TaxCalculate taxCalculate,
+        IValidator<CreateProductRequest> createProductRequestValidator) : IProductService
     {
         public const int BarcodeLength = 6;
 

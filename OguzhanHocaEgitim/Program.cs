@@ -1,5 +1,6 @@
 using Applications.Products;
 using Applications.Products.Create;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Persistences.Repositories;
 using Presentation.API.Endpoints.Products;
@@ -14,6 +15,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<TaxCalculate>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepositoryWithInMemory>();
+
+
+// IValidator<CreateProductRequest> => CreateProductRequestValidator
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>();
+
 
 //N-Layer
 //Clean Architecture-Onion Architecture
@@ -39,6 +45,7 @@ var app = builder.Build();
 
 
 app.AddProductEndpoints();
+app.AddFilterEndpoints();
 
 
 // Configure the HTTP request pipeline.

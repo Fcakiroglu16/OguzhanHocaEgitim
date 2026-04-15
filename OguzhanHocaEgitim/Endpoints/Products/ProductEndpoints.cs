@@ -1,4 +1,5 @@
-﻿using Applications.Products;
+﻿using Applications;
+using Applications.Products;
 using Applications.Products.Create;
 using Applications.Products.Update;
 using Microsoft.AspNetCore.Mvc;
@@ -21,45 +22,35 @@ namespace Presentation.API.Endpoints.Products
             var productsGroup = app.MapGroup("minimal-api/products").WithTags("Products-Minimals");
 
 
-            productsGroup.MapGet("/", ([FromServices] IProductService productService) =>
-            {
-                var products = productService.GetAll();
-
-                return Results.Ok(products);
-            });
+            productsGroup.MapGet("/",
+                ([FromServices] IProductService productService) => productService.GetAll().ToActionResult());
 
             productsGroup.MapGet("/{page}/{pageSize}",
                 ([FromServices] IProductService productService, int page, int pageSize) =>
-                {
-                    var products = productService.GetAllByPaged(page, pageSize);
-
-                    return Results.Ok(products);
-                });
+                    productService.GetAllByPaged(page, pageSize).ToActionResult());
 
 
             productsGroup.MapPost("/",
                 ([FromServices] IProductService productService, [FromBody] CreateProductRequest request) =>
-                {
-                    var result = productService.Create(request);
+                    productService.Create(request).ToActionResult()).AddEndpointFilter(async (context, next) =>
+            {
+                Console.WriteLine("1. filter before");
 
-                    return Results.Created($"minimal-api/products/{result.Data!.Id}", result);
-                });
+                var response = await next(context);
+                Console.WriteLine("1. filter after");
+
+                return response;
+            }).AddEndpointFilter<ValidationFilter<CreateProductRequest>>();
 
             productsGroup.MapPut("/",
-                ([FromServices] IProductService productService, [FromBody] UpdateProductRequest request) =>
-                {
-                    var result = productService.Update(request);
+                    ([FromServices] IProductService productService, [FromBody] UpdateProductRequest request) =>
+                        productService.Update(request).ToActionResult())
+                .AddEndpointFilter<ValidationFilter<UpdateProductRequest>>();
 
-                    return Results.NoContent();
-                });
 
-            productsGroup.MapDelete("/{id}",
+            productsGroup.MapDelete("/{id:int}",
                 ([FromServices] IProductService productService, [FromRoute] int id) =>
-                {
-                    var result = productService.Delete(id);
-
-                    return Results.NoContent();
-                });
+                    productService.Delete(id).ToActionResult());
         }
     }
 }
