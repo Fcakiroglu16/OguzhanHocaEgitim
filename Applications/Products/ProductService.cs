@@ -101,6 +101,7 @@ namespace Applications.Products
         {
             var existProduct = productRepository.Exist(request.Name);
 
+
             if (existProduct)
             {
                 return ServiceResult<CreateProductResponse>.Failure(HttpStatusCode.BadRequest,

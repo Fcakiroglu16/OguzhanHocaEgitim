@@ -4,6 +4,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Persistences.Repositories;
 using Presentation.API.Endpoints.Products;
+using Presentation.API.Endpoints.VersionExamples;
+using Presentation.API.Extensions;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,30 +23,21 @@ builder.Services.AddScoped<IProductRepository, ProductRepositoryWithInMemory>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>();
 
 
-//N-Layer
-//Clean Architecture-Onion Architecture
-
-
-// Add services to the container.
-
-
-// DI Container  / IoC Container => Library
-
-//Dependency Inversion + Inversion of Control => Dependency Injection ( pattern )
-
-
-//ProductController(high level) => ProductService(low level)
-//ProductService(high level) => ProductRepository(low level)
-
-
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddVersioningExt();
 var app = builder.Build();
 
+app.UseExceptionHandler(exceptionApp =>
+{
+    //  exceptionApp.Run();
+});
 
-app.AddProductEndpoints();
+
+app.AddProductEndpoints(app.AddVersionSetExt());
+app.AddVersionExamplesEndpoints(app.AddVersionSetExt());
 app.AddFilterEndpoints();
 
 

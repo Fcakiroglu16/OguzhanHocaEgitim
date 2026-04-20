@@ -22,7 +22,7 @@ namespace Applications
             var requestModel = context.Arguments.OfType<T>().FirstOrDefault();
 
 
-            if (requestModel is null) return next(context);
+            if (requestModel is null) return await next(context);
 
 
             var validationResult = validator.Validate(requestModel);
@@ -33,7 +33,7 @@ namespace Applications
                 return Results.ValidationProblem(validationResult.ToDictionary());
             }
 
-            return next(context);
+            return await next(context);
         }
     }
 }
