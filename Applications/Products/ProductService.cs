@@ -4,26 +4,29 @@ using Applications.Products.Dto;
 using Applications.Products.Update;
 using Domains;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 
 namespace Applications.Products
 {
     public class ProductService(
         IProductRepository productRepository,
         TaxCalculate taxCalculate,
-        IValidator<CreateProductRequest> createProductRequestValidator) : IProductService
+        IValidator<CreateProductRequest> createProductRequestValidator,
+        ILogger<ProductService> logger,
+        ILoggerFactory loggerFactory) : IProductService
     {
         public const int BarcodeLength = 6;
 
 
         public ServiceResult<List<ProductDto>> GetAll()
         {
-            //success =>  empty ( Status Code )
-            //success =>  list of products  ( Status Code )
-            //failure => empty  ( Status Code )
-            //failure => error list  ( Status Code )
+            logger.LogInformation("GetAll methodu çalıştı");
 
 
-            //Result Pattern =>
+            var logger2 = loggerFactory.CreateLogger("xxxx");
+
+            logger2.LogInformation("GetAll methodu çalıştı (logger2)");
+
 
             var productList = productRepository.GetAll();
 

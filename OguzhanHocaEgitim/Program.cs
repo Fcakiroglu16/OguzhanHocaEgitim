@@ -1,10 +1,13 @@
 using Applications.Products;
 using Applications.Products.Create;
+using Domains;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Persistences.Repositories;
+using Presentation.API.Endpoints.ErrorHandlerExample;
 using Presentation.API.Endpoints.Products;
 using Presentation.API.Endpoints.VersionExamples;
+using Presentation.API.ExceptionHandler;
 using Presentation.API.Extensions;
 using Scalar.AspNetCore;
 
@@ -28,11 +31,29 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddVersioningExt();
+
+builder.Services.AddExceptionHandler<BusinessExceptionHandler>().AddExceptionHandler<GlobalExceptionHandler>();
 var app = builder.Build();
+
+app.AddExceptionHandlerEndpoints();
+
 
 app.UseExceptionHandler(exceptionApp =>
 {
-    //  exceptionApp.Run();
+    //exceptionApp.Run((context) =>
+    //{
+    //    var exceptionHandlerPathFeature =
+    //        context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
+    //    var exception = exceptionHandlerPathFeature?.Error;
+
+
+    //    context.Response.ContentType = "application/json";
+    //    context.Response.StatusCode = 500; // Internal Server Error
+    //    return context.Response.WriteAsJsonAsync(new
+    //    {
+    //        Message = "An unexpected error occurred."
+    //    });
+    //});
 });
 
 
