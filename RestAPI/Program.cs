@@ -3,6 +3,8 @@ using Applications.Products.Create;
 using Domains;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Persistences.Repositories;
 using Presentation.API.Endpoints.ErrorHandlerExample;
 using Presentation.API.Endpoints.Products;
@@ -33,6 +35,23 @@ builder.Services.AddOpenApi();
 builder.Services.AddVersioningExt();
 
 builder.Services.AddExceptionHandler<BusinessExceptionHandler>().AddExceptionHandler<GlobalExceptionHandler>();
+
+
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource
+        .AddService(serviceName: "RestAPI", serviceVersion: "1.0")
+        .AddAttributes(new Dictionary<string, object>
+        {
+            ["deployment.environment"] = builder.Environment.EnvironmentName
+        }))
+    .WithTracing(traceBuilder =>
+    {
+        traceBuilder.AddAspNetCoreInstrumentation();
+        traceBuilder.AddSource("Applications.ActivitySource");
+        traceBuilder.AddConsoleExporter();
+    });
+
+
 var app = builder.Build();
 
 app.AddExceptionHandlerEndpoints();

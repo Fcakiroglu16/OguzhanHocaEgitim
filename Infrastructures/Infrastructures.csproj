@@ -10,4 +10,14 @@
     <ProjectReference Include="..\Applications\Applications.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="OpenTelemetry\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.15.3" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+  </ItemGroup>
+
 </Project>

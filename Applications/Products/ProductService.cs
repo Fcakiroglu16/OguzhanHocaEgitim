@@ -1,10 +1,12 @@
-﻿using System.Net;
+﻿using Applications.ActivitySource;
 using Applications.Products.Create;
 using Applications.Products.Dto;
 using Applications.Products.Update;
 using Domains;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Net;
 
 namespace Applications.Products
 {
@@ -32,10 +34,20 @@ namespace Applications.Products
 
             var productListAsDto = new List<ProductDto>();
 
-            foreach (var product in productList)
+            var userId = 100;
+            var tenantId = 500;
+            using (var activity =
+                   ActivitySourceProvider.ActivitySource.StartActivity("product_list", ActivityKind.Server))
             {
-                var productDto = new ProductDto(product.Id, product.Name, taxCalculate.CalculateTax(product.Price, 20));
-                productListAsDto.Add(productDto);
+                activity!.AddTag("userId", userId.ToString());
+                activity!.AddTag("tenantId", tenantId.ToString());
+
+                activity.AddEvent(new ActivityEvent("product list datası çekilmeden önce"));
+
+                productListAsDto.AddRange(productList.Select(product =>
+                    new ProductDto(product.Id, product.Name, taxCalculate.CalculateTax(product.Price, 20))));
+
+                activity.AddEvent(new ActivityEvent("product list datası çekildikten sonra"));
             }
 
 
