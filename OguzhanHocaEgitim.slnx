@@ -3,6 +3,6 @@
   <Project Path="Domains/Domains.csproj" Id="888aad62-6277-4b3a-97f2-6205f60c44af" />
   <Project Path="Infrastructures/Infrastructures.csproj" Id="ef8df0f6-985f-4670-b9a8-259c93db9f50" />
   <Project Path="LearningCsharp/LearningCsharp.csproj" Id="e909a961-b883-4ac3-a5c0-ae7862b710ba" />
-  <Project Path="OguzhanHocaEgitim/Presentation.API.csproj" />
   <Project Path="Persistences/Persistences.csproj" Id="4116f9a2-b8c2-4deb-bf20-56493b135bd0" />
+  <Project Path="RestAPI/Presentation.API.csproj" />
 </Solution>
