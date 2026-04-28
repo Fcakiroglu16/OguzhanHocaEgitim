@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using Applications.ActivitySource;
 using Applications.Products;
 using Applications.Products.Create;
 using Domains;
@@ -15,6 +17,8 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+ActivitySourceProvider.ActivitySource = new ActivitySource(builder.Environment.ApplicationName);
 
 //transient> scoped > singleton
 
@@ -37,22 +41,27 @@ builder.Services.AddVersioningExt();
 builder.Services.AddExceptionHandler<BusinessExceptionHandler>().AddExceptionHandler<GlobalExceptionHandler>();
 
 
-builder.Services.AddOpenTelemetry()
-    .ConfigureResource(resource => resource
-        .AddService(serviceName: "RestAPI", serviceVersion: "1.0")
-        .AddAttributes(new Dictionary<string, object>
-        {
-            ["deployment.environment"] = builder.Environment.EnvironmentName
-        }))
-    .WithTracing(traceBuilder =>
-    {
-        traceBuilder.AddAspNetCoreInstrumentation();
-        traceBuilder.AddSource("Applications.ActivitySource");
-        traceBuilder.AddConsoleExporter();
-    });
+//
+
+
+//builder.Services.AddOpenTelemetry()
+//    .ConfigureResource(resource => resource
+//        .AddService(serviceName: "RestAPI", serviceVersion: "1.0")
+//        .AddAttributes(new Dictionary<string, object>
+//        {
+//            ["deployment.environment"] = builder.Environment.EnvironmentName
+//        }))
+//    .WithTracing(traceBuilder =>
+//    {
+//        traceBuilder.AddAspNetCoreInstrumentation();
+//        traceBuilder.AddSource("Applications.ActivitySource");
+//        traceBuilder.AddConsoleExporter();
+//    });
 
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.AddExceptionHandlerEndpoints();
 
