@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Applications.ActivitySource;
+using Applications.Metrics;
 using Applications.Products;
 using Applications.Products.Create;
 using Domains;
@@ -11,6 +12,7 @@ using Persistences.Repositories;
 using Presentation.API.Endpoints.ErrorHandlerExample;
 using Presentation.API.Endpoints.Products;
 using Presentation.API.Endpoints.VersionExamples;
+using Presentation.API.Endpoints.WeatherForecast;
 using Presentation.API.ExceptionHandler;
 using Presentation.API.Extensions;
 using Scalar.AspNetCore;
@@ -24,6 +26,7 @@ ActivitySourceProvider.ActivitySource = new ActivitySource(builder.Environment.A
 
 //Singleton
 builder.Services.AddSingleton<TaxCalculate>();
+builder.Services.AddSingleton<GlobalMetrics>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepositoryWithInMemory>();
 
@@ -39,6 +42,11 @@ builder.Services.AddOpenApi();
 builder.Services.AddVersioningExt();
 
 builder.Services.AddExceptionHandler<BusinessExceptionHandler>().AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.AddHttpClient("webapplication2-api", client =>
+{
+    client.BaseAddress = new Uri("https+http://webapplication2-api");
+});
 
 
 //
@@ -88,6 +96,7 @@ app.UseExceptionHandler(exceptionApp =>
 app.AddProductEndpoints(app.AddVersionSetExt());
 app.AddVersionExamplesEndpoints(app.AddVersionSetExt());
 app.AddFilterEndpoints();
+app.AddWeatherForecastEndpoints();
 
 
 // Configure the HTTP request pipeline.

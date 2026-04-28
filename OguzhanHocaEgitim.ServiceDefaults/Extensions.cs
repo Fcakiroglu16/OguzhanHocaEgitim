@@ -55,6 +55,7 @@ public static class Extensions
         builder.Services.AddOpenTelemetry()
             .WithMetrics(metrics =>
             {
+                metrics.AddMeter("API1");
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation();
@@ -67,9 +68,6 @@ public static class Extensions
                         // Exclude health check requests from tracing
                         tracing.Filter = context => context.Request.Path.StartsWithSegments("/api")
                     )
-
-                    // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
-                    //.AddGrpcClientInstrumentation()
                     .AddHttpClientInstrumentation();
             });
 
