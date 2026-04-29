@@ -6,8 +6,10 @@ using Applications.Products.Create;
 using Domains;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Persistences;
 using Persistences.Repositories;
 using Presentation.API.Endpoints.ErrorHandlerExample;
 using Presentation.API.Endpoints.Products;
@@ -19,6 +21,10 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddPersistenceExt(builder.Configuration);
+
+
 builder.AddServiceDefaults();
 ActivitySourceProvider.ActivitySource = new ActivitySource(builder.Environment.ApplicationName);
 
@@ -28,7 +34,6 @@ ActivitySourceProvider.ActivitySource = new ActivitySource(builder.Environment.A
 builder.Services.AddSingleton<TaxCalculate>();
 builder.Services.AddSingleton<GlobalMetrics>();
 builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IProductRepository, ProductRepositoryWithInMemory>();
 
 
 // IValidator<CreateProductRequest> => CreateProductRequestValidator
@@ -49,24 +54,6 @@ builder.Services.AddHttpClient("webapplication2-api", client =>
 });
 
 
-//
-
-
-//builder.Services.AddOpenTelemetry()
-//    .ConfigureResource(resource => resource
-//        .AddService(serviceName: "RestAPI", serviceVersion: "1.0")
-//        .AddAttributes(new Dictionary<string, object>
-//        {
-//            ["deployment.environment"] = builder.Environment.EnvironmentName
-//        }))
-//    .WithTracing(traceBuilder =>
-//    {
-//        traceBuilder.AddAspNetCoreInstrumentation();
-//        traceBuilder.AddSource("Applications.ActivitySource");
-//        traceBuilder.AddConsoleExporter();
-//    });
-
-
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
@@ -74,23 +61,7 @@ app.MapDefaultEndpoints();
 app.AddExceptionHandlerEndpoints();
 
 
-app.UseExceptionHandler(exceptionApp =>
-{
-    //exceptionApp.Run((context) =>
-    //{
-    //    var exceptionHandlerPathFeature =
-    //        context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
-    //    var exception = exceptionHandlerPathFeature?.Error;
-
-
-    //    context.Response.ContentType = "application/json";
-    //    context.Response.StatusCode = 500; // Internal Server Error
-    //    return context.Response.WriteAsJsonAsync(new
-    //    {
-    //        Message = "An unexpected error occurred."
-    //    });
-    //});
-});
+app.UseExceptionHandler(exceptionApp => { });
 
 
 app.AddProductEndpoints(app.AddVersionSetExt());

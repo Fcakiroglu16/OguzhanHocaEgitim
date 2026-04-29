@@ -6,9 +6,7 @@
     <Project Path="Persistences/Persistences.csproj" Id="4116f9a2-b8c2-4deb-bf20-56493b135bd0" />
     <Project Path="RestAPI/Presentation.API.csproj" />
   </Folder>
-  <Folder Name="/API2/">
-    <Project Path="WebApplication2.API/WebApplication2.API.csproj" />
-  </Folder>
+  <Folder Name="/API2/" />
   <Folder Name="/Learning/">
     <Project Path="LearningCsharp/LearningCsharp.csproj" Id="e909a961-b883-4ac3-a5c0-ae7862b710ba" />
   </Folder>

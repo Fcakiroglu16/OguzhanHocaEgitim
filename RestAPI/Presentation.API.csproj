@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>147d2b51-6455-40e1-ad74-1c30bb018222</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +12,10 @@
     <PackageReference Include="Asp.Versioning.Mvc" Version="10.0.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Scalar.AspNetCore" Version="2.14.6" />
   </ItemGroup>
 

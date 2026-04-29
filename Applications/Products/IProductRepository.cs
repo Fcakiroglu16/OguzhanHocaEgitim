@@ -17,6 +17,6 @@ namespace Applications.Products
         public Product? Get(int id);
 
         public bool Exist(string productName);
-        void Delete(Product product);
+        void Remove(Product product);
     }
 }

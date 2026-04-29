@@ -146,7 +146,7 @@ namespace Applications.Products
             }
 
 
-            productRepository.Delete(hasProduct);
+            productRepository.Remove(hasProduct);
 
             return ServiceResult.Success(HttpStatusCode.NoContent);
         }
