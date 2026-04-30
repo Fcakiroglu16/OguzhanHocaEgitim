@@ -14,5 +14,8 @@ namespace Domains
         public decimal Price { get; set; }
 
         public string Barcode { get; set; } = null!;
+
+
+        public int CategoryId { get; set; }
     }
 }

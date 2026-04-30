@@ -1,12 +1,10 @@
-﻿using Applications.Products;
+﻿using Applications;
+using Applications.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Persistences.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace Persistences
 {
@@ -24,6 +22,8 @@ namespace Persistences
                     });
             });
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

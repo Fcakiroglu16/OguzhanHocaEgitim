@@ -12,6 +12,8 @@ namespace Applications.Products
 {
     public class ProductService(
         IProductRepository productRepository,
+        ICategoryRepository categoryRepository,
+        IUnitOfWork unitOfWork,
         TaxCalculate taxCalculate,
         IValidator<CreateProductRequest> createProductRequestValidator,
         ILogger<ProductService> logger,
@@ -105,12 +107,44 @@ namespace Applications.Products
             productRepository.Update(hasProduct);
 
 
+            unitOfWork.Commit();
             return ServiceResult.Success(HttpStatusCode.NoContent);
-            //return new ServiceResult()
-            //{
-            //    StatusCode = HttpStatusCode.NoContent
-            //};
         }
+
+
+        public record CreateProductAndCategoryRequest(string Name, decimal Price, string CategoryName);
+
+
+        public ServiceResult CreateWithCategory(CreateProductAndCategoryRequest request)
+        {
+            var hasCategory = categoryRepository.Exist(request.CategoryName);
+
+            if (hasCategory)
+            {
+                return ServiceResult.Failure(HttpStatusCode.BadRequest, "kategori ismi veritabanında bulunmaktadır.");
+            }
+
+            unitOfWork.BeginTransaction();
+            var category = categoryRepository.Create(new Category() { Name = request.Name });
+
+
+            unitOfWork.Commit();
+
+            var product = new Product()
+            {
+                Name = request.Name,
+                Price = request.Price,
+                CategoryId = category.Id
+            };
+
+            productRepository.Create(product);
+            unitOfWork.Commit();
+
+
+            unitOfWork.CommitTransaction();
+            return ServiceResult.Success(HttpStatusCode.Created);
+        }
+
 
         public ServiceResult<CreateProductResponse> Create(CreateProductRequest request)
         {
@@ -148,6 +182,8 @@ namespace Applications.Products
 
             productRepository.Remove(hasProduct);
 
+
+            unitOfWork.Commit();
             return ServiceResult.Success(HttpStatusCode.NoContent);
         }
 
