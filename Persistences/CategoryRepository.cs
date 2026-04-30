@@ -16,7 +16,11 @@ namespace Persistences
 
         public bool Exist(string categoryName)
         {
-            return context.Categories.Any(c => c.Name == categoryName);
+            var categoryies = context.Categories.ToList();
+
+            var result = context.Categories.Any(c => c.Name == categoryName);
+
+            return result;
         }
     }
 }

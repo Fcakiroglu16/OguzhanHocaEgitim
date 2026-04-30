@@ -121,6 +121,7 @@ public class ServiceResult
             return serviceResult.StatusCode switch
             {
                 HttpStatusCode.NoContent => Results.NoContent(),
+                HttpStatusCode.Created => Results.Created(),
                 _ => Results.Problem(serviceResult.ProblemDetails!)
             };
         }

@@ -125,16 +125,19 @@ namespace Applications.Products
             }
 
             unitOfWork.BeginTransaction();
-            var category = categoryRepository.Create(new Category() { Name = request.Name });
+            var category = categoryRepository.Create(new Category() { Name = request.CategoryName });
 
 
             unitOfWork.Commit();
 
+
+            throw new Exception("db hatası");
             var product = new Product()
             {
                 Name = request.Name,
                 Price = request.Price,
-                CategoryId = category.Id
+                CategoryId = category.Id,
+                Barcode = "AAAAAAAAAA"
             };
 
             productRepository.Create(product);

@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning.Builder;
 using Presentation.API.Endpoints.Products.Create;
+using Presentation.API.Endpoints.Products.CreateWithCategory;
 using Presentation.API.Endpoints.Products.Delete;
 using Presentation.API.Endpoints.Products.GetAll;
 using Presentation.API.Endpoints.Products.GetAllByPaged;
@@ -18,6 +19,7 @@ public static class VersionExampleEndpoints
             .AddGetAllProductsEndpoint()
             .AddGetAllByPagedProductsEndpoint()
             .AddCreateProductEndpoint()
+            .AddCreateWithCategoryEndpoint()
             .AddUpdateProductEndpoint()
             .AddDeleteProductEndpoint();
     }

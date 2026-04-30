@@ -4,6 +4,7 @@ using Applications.Products.Update;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static Applications.Products.ProductService;
 
 namespace Applications.Products
 {
@@ -15,5 +16,6 @@ namespace Applications.Products
         ServiceResult Update(UpdateProductRequest request);
         ServiceResult<CreateProductResponse> Create(CreateProductRequest request);
         ServiceResult Delete(int id);
+        ServiceResult CreateWithCategory(CreateProductAndCategoryRequest request);
     }
 }
