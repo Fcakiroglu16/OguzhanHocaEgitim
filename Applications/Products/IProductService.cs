@@ -15,7 +15,8 @@ namespace Applications.Products
         ServiceResult<ProductDto> GetById(int id);
         ServiceResult Update(UpdateProductRequest request);
         ServiceResult<CreateProductResponse> Create(CreateProductRequest request);
+        ServiceResult<CreateProductResponse> Create2(CreateProductRequest request);
         ServiceResult Delete(int id);
-        ServiceResult CreateWithCategory(CreateProductAndCategoryRequest request);
+        ServiceResult CreateWithCategoryAndDetails(CreateProductAndCategoryAndDetailsRequest request);
     }
 }

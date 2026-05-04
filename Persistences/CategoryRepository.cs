@@ -6,21 +6,7 @@ using Domains;
 
 namespace Persistences
 {
-    public class CategoryRepository(AppDbContext context) : ICategoryRepository
+    public class CategoryRepository(AppDbContext context) : GenericRepository<Category>(context), ICategoryRepository
     {
-        public Category Create(Category category)
-        {
-            context.Categories.Add(category);
-            return category;
-        }
-
-        public bool Exist(string categoryName)
-        {
-            var categoryies = context.Categories.ToList();
-
-            var result = context.Categories.Any(c => c.Name == categoryName);
-
-            return result;
-        }
     }
 }

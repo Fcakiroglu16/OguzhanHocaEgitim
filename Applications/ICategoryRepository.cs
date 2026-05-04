@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Applications.Products;
 using Domains;
 
 namespace Applications
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository : IGenericRepository<Category>
     {
-        Category Create(Category category);
-
-        public bool Exist(string categoryName);
     }
 }

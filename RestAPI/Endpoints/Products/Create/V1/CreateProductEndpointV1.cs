@@ -13,7 +13,7 @@ public static class CreateProductEndpointV1
     {
         group.MapPost("/",
                 ([FromServices] IProductService productService, [FromBody] CreateProductRequest request) =>
-                    productService.Create(request).ToActionResult())
+                    productService.Create2(request).ToActionResult())
             .AddEndpointFilter<ValidationFilter<CreateProductRequest>>()
             .MapToApiVersion(new ApiVersion(1, 0));
 

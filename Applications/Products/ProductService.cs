@@ -6,6 +6,7 @@ using Domains;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Drawing;
 using System.Net;
 
 namespace Applications.Products
@@ -19,7 +20,7 @@ namespace Applications.Products
         ILogger<ProductService> logger,
         ILoggerFactory loggerFactory) : IProductService
     {
-        public const int BarcodeLength = 6;
+        public const int BarcodeLength = 10;
 
 
         public ServiceResult<List<ProductDto>> GetAll()
@@ -80,7 +81,7 @@ namespace Applications.Products
 
         public ServiceResult<ProductDto> GetById(int id)
         {
-            var product = productRepository.Get(id);
+            var product = productRepository.GetById(id);
             if (product is null)
             {
                 return ServiceResult<ProductDto>.Failure(HttpStatusCode.NotFound, $"Product with id {id} not found.");
@@ -93,7 +94,7 @@ namespace Applications.Products
 
         public ServiceResult Update(UpdateProductRequest request)
         {
-            var hasProduct = productRepository.Get(request.Id);
+            var hasProduct = productRepository.GetById(request.Id);
 
             if (hasProduct is null)
             {
@@ -112,46 +113,59 @@ namespace Applications.Products
         }
 
 
-        public record CreateProductAndCategoryRequest(string Name, decimal Price, string CategoryName);
+        public record CreateProductAndCategoryAndDetailsRequest(
+            string Name,
+            decimal Price,
+            string CategoryName,
+            int Width,
+            int Height,
+            ProductColor color);
 
 
-        public ServiceResult CreateWithCategory(CreateProductAndCategoryRequest request)
+        public ServiceResult CreateWithCategoryAndDetails(CreateProductAndCategoryAndDetailsRequest request)
         {
-            var hasCategory = categoryRepository.Exist(request.CategoryName);
-
-            if (hasCategory)
-            {
-                return ServiceResult.Failure(HttpStatusCode.BadRequest, "kategori ismi veritabanında bulunmaktadır.");
-            }
-
-            unitOfWork.BeginTransaction();
-            var category = categoryRepository.Create(new Category() { Name = request.CategoryName });
+            var hasCategory = categoryRepository.Where(c => c.Name == request.CategoryName).FirstOrDefault();
 
 
-            unitOfWork.Commit();
-
-
-            throw new Exception("db hatası");
             var product = new Product()
             {
                 Name = request.Name,
                 Price = request.Price,
-                CategoryId = category.Id,
-                Barcode = "AAAAAAAAAA"
+                Barcode = "AAAAAAAAAA",
+                ProductDetail = new ProductDetail()
+                {
+                    Height = request.Height,
+                    Width = request.Width,
+                    Color = request.color,
+                }
             };
 
-            productRepository.Create(product);
+
+            if (hasCategory is null)
+            {
+                hasCategory = new Category
+                {
+                    Name = request.CategoryName,
+                    Products = [product]
+                };
+
+                categoryRepository.Add(hasCategory);
+            }
+            else
+            {
+                hasCategory.Products = [product];
+
+                categoryRepository.Update(hasCategory);
+            }
+
             unitOfWork.Commit();
-
-
-            unitOfWork.CommitTransaction();
             return ServiceResult.Success(HttpStatusCode.Created);
         }
 
 
         public ServiceResult<CreateProductResponse> Create(CreateProductRequest request)
         {
-            var existProduct = productRepository.Exist(request.Name);
+            var existProduct = productRepository.Exist(p => p.Name == request.Name);
 
 
             if (existProduct)
@@ -167,15 +181,47 @@ namespace Applications.Products
                 Barcode = GenerateBarcode()
             };
 
-            var createdProduct = productRepository.Create(newProduct);
+            var createdProduct = productRepository.Add(newProduct);
 
             return ServiceResult<CreateProductResponse>.Success(new CreateProductResponse(createdProduct.Id),
                 HttpStatusCode.Created);
         }
 
+        public ServiceResult<CreateProductResponse> Create2(CreateProductRequest request)
+        {
+            var category = categoryRepository.Where(x => x.Id == request.CategoryId).FirstOrDefault();
+
+
+            if (category is null)
+            {
+                return ServiceResult<CreateProductResponse>.Failure(HttpStatusCode.BadRequest,
+                    $"Category with id {request.CategoryId} not found.");
+            }
+
+            var newProduct = new Product()
+            {
+                Name = request.Name,
+                Price = request.Price!.Value,
+                Barcode = GenerateBarcode()
+            };
+
+            category.Products =
+            [
+                newProduct
+            ];
+
+            categoryRepository.Update(category);
+
+            unitOfWork.Commit();
+
+
+            return ServiceResult<CreateProductResponse>.Success(new CreateProductResponse(newProduct.Id),
+                HttpStatusCode.Created);
+        }
+
         public ServiceResult Delete(int id)
         {
-            var hasProduct = productRepository.Get(id);
+            var hasProduct = productRepository.GetById(id);
 
             if (hasProduct is null)
             {
@@ -183,7 +229,7 @@ namespace Applications.Products
             }
 
 
-            productRepository.Remove(hasProduct);
+            productRepository.Delete(hasProduct);
 
 
             unitOfWork.Commit();
