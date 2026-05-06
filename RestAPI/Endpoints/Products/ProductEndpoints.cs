@@ -4,6 +4,7 @@ using Presentation.API.Endpoints.Products.CreateWithCategory;
 using Presentation.API.Endpoints.Products.Delete;
 using Presentation.API.Endpoints.Products.GetAll;
 using Presentation.API.Endpoints.Products.GetAllByPaged;
+using Presentation.API.Endpoints.Products.GetAllWithCategoryAndFeature;
 using Presentation.API.Endpoints.Products.Update;
 
 namespace Presentation.API.Endpoints.Products;
@@ -18,6 +19,7 @@ public static class VersionExampleEndpoints
         productsGroup
             .AddGetAllProductsEndpoint()
             .AddGetAllByPagedProductsEndpoint()
+            .AddGetAllWithCategoryAndFeatureEndpoint()
             .AddCreateProductEndpoint()
             .AddCreateWithCategoryEndpoint()
             .AddUpdateProductEndpoint()

@@ -18,8 +18,8 @@ namespace Domains
 
         public int CategoryId { get; set; }
 
-        public Category Category { get; set; } = null!;
+        public virtual Category Category { get; set; } = null!;
 
-        public ProductDetail? ProductDetail { get; set; }
+        public virtual ProductDetail? ProductDetail { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistences;
 
@@ -10,9 +11,11 @@ using Persistences;
 namespace Persistences.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260506091114_many-to-many-relationship")]
+    partial class manytomanyrelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,13 +111,11 @@ namespace Persistences.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students", "dbo");
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("Domains.Teacher", b =>
@@ -127,13 +128,11 @@ namespace Persistences.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("Name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teachers", "dbo");
+                    b.ToTable("Teachers");
                 });
 
             modelBuilder.Entity("StudentTeacher", b =>
@@ -148,7 +147,7 @@ namespace Persistences.Migrations
 
                     b.HasIndex("TeachersId");
 
-                    b.ToTable("StudentTeacher", "dbo");
+                    b.ToTable("StudentTeacher");
                 });
 
             modelBuilder.Entity("Domains.Product", b =>

@@ -20,7 +20,30 @@ namespace Applications.Products
         ILogger<ProductService> logger,
         ILoggerFactory loggerFactory) : IProductService
     {
-        public const int BarcodeLength = 10;
+        public record GetAllWithCategoryAndFeatureResponse(
+            int Id,
+            string Name,
+            decimal Price,
+            string CategoryName,
+            int? Width,
+            int? Height);
+
+        public ServiceResult<List<GetAllWithCategoryAndFeatureResponse>> GetAllWithCategoryAndFeature()
+        {
+            var products = productRepository.GetAllWithCategoryAndFeature();
+
+
+            var productsAsDto = products.Select(p => new GetAllWithCategoryAndFeatureResponse(
+                p.Id,
+                p.Name,
+                taxCalculate.CalculateTax(p.Price, 20),
+                p.Category.Name,
+                p.ProductDetail?.Width,
+                p.ProductDetail?.Height)).ToList();
+
+
+            return ServiceResult<List<GetAllWithCategoryAndFeatureResponse>>.Success(productsAsDto, HttpStatusCode.OK);
+        }
 
 
         public ServiceResult<List<ProductDto>> GetAll()
@@ -236,9 +259,9 @@ namespace Applications.Products
             return ServiceResult.Success(HttpStatusCode.NoContent);
         }
 
-
         private static string GenerateBarcode()
         {
+            const int BarcodeLength = 10;
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             var random = Random.Shared;
 

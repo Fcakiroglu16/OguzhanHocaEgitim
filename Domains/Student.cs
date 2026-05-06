@@ -4,12 +4,11 @@ using System.Text;
 
 namespace Domains
 {
-    public class Category
+    public class Student
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
 
-        //navigation property
-        public virtual List<Product>? Products { get; set; }
+        public virtual List<Teacher>? Teachers { get; set; }
     }
 }

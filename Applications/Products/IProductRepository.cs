@@ -7,6 +7,7 @@ namespace Applications.Products
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
+        List<Product> GetAllWithCategoryAndFeature();
         public List<Product> GeatAllByPaged(int page, int pageSize);
 
         public List<Product> Get(decimal price);

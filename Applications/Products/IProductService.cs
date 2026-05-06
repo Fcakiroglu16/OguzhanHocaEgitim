@@ -18,5 +18,7 @@ namespace Applications.Products
         ServiceResult<CreateProductResponse> Create2(CreateProductRequest request);
         ServiceResult Delete(int id);
         ServiceResult CreateWithCategoryAndDetails(CreateProductAndCategoryAndDetailsRequest request);
+
+        ServiceResult<List<GetAllWithCategoryAndFeatureResponse>> GetAllWithCategoryAndFeature();
     }
 }

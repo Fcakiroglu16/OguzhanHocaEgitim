@@ -66,7 +66,6 @@ app.UseExceptionHandler(exceptionApp => { });
 
 app.AddProductEndpoints(app.AddVersionSetExt());
 app.AddVersionExamplesEndpoints(app.AddVersionSetExt());
-app.AddFilterEndpoints();
 app.AddWeatherForecastEndpoints();
 
 

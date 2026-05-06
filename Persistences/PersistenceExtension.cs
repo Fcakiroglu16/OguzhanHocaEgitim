@@ -14,6 +14,7 @@ namespace Persistences
         {
             services.AddDbContext<AppDbContext>(options =>
             {
+                options.UseLazyLoadingProxies();
                 // options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 options.UseSqlServer(configuration.GetConnectionString("SqlServer"),
                     sqlServerOptions =>

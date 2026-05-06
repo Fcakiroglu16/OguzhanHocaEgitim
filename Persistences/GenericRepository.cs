@@ -7,9 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistences
 {
-    public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> where T : class
+    public class GenericRepository<T>(AppDbContext dbContext) : IGenericRepository<T> where T : class
     {
-        private readonly DbSet<T> _dbSet = context.Set<T>();
+        private readonly DbSet<T> _dbSet = dbContext.Set<T>();
+
+        protected AppDbContext Context = dbContext;
 
         public T? GetById(int id)
         {
