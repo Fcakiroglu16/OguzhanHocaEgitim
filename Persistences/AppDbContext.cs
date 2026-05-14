@@ -11,8 +11,12 @@ namespace Persistences
     //Scope
     public class AppDbContext(DbContextOptions<AppDbContext> option) : DbContext(option)
     {
+        public DbSet<ProductFullModel> ProductFullModels { get; set; }
+
+        public DbSet<VProductFullModel> VProductFullModels { get; set; }
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<ProductDetail> ProductDetails { get; set; }
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Teacher> Teachers { get; set; }
@@ -27,6 +31,13 @@ namespace Persistences
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ProductFullModel>().HasNoKey();
+            modelBuilder.Entity<ProductFullModel>().ToTable("ProductFullModels", t => t.ExcludeFromMigrations());
+
+
+            modelBuilder.Entity<VProductFullModel>().HasNoKey().ToView("v_productList");
+
+
             //conventions
             //attribute
             // fluent api ( best practice )

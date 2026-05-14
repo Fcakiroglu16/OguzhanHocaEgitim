@@ -48,12 +48,7 @@ namespace Applications.Products
 
         public ServiceResult<List<ProductDto>> GetAll()
         {
-            logger.LogInformation("GetAll methodu çalıştı");
-
-
-            var logger2 = loggerFactory.CreateLogger("xxxx");
-
-            logger2.LogInformation("GetAll methodu çalıştı (logger2)");
+            var FullProductModel = productRepository.GetFullModel();
 
 
             var productList = productRepository.GetAll();
