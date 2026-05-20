@@ -12,23 +12,43 @@ namespace Persistences.Repositories
 {
     public class ProductRepository(AppDbContext context) : GenericRepository<Product>(context), IProductRepository
     {
-        public List<SpProductFullModel> StoreProsedureExample()
+        public List<SpProductFullModel> StoreProcedureExample()
         {
-            var productNameParam = new SqlParameter("@ProductName", "silgi");
-            var categoryIdParam = new SqlParameter("@CategoryId", "2");
-
-            return Context.Set<SpProductFullModel>()
-                .FromSqlRaw("EXEC usp_GetProductsByProductName @ProductName, @CategoryId",
-                    productNameParam, categoryIdParam)
+            return Context.Database.SqlQueryRaw<SpProductFullModel>(
+                    "EXEC usp_GetProductsByProductName @ProductName, @CategoryId",
+                    new SqlParameter("@ProductName", "silgi"),
+                    new SqlParameter("@CategoryId", "2"))
                 .ToList();
         }
 
-        public List<SpProductFullModel> StoreProsedureExample2(string productName, int categoryId)
+        public void X(string name, params int[] ids)
         {
-            return Context.Set<SpProductFullModel>()
-                .FromSqlInterpolated(
-                    $"EXEC usp_GetProductsByProductName @ProductName={productName}, @CategoryId={categoryId}")
-                .ToList();
+        }
+
+        public Product StoreProcedureInsertExample(string name, decimal price, string barcode, int categoryId)
+        {
+            var newId = new SqlParameter("@NewId", System.Data.SqlDbType.Int)
+            {
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            Context.Database.ExecuteSqlRaw(
+                $"EXEC usp_InsertProduct @Name, @Price, @Barcode, @CategoryId, @NewId OUTPUT",
+                new SqlParameter("@Name", name),
+                new SqlParameter("@Price", price),
+                new SqlParameter("@Barcode", barcode),
+                new SqlParameter("@CategoryId", categoryId), newId
+            );
+
+            var newProductId = (int)newId.Value;
+            return new Product()
+            {
+                Id = newProductId,
+                Name = name,
+                Price = price,
+                Barcode = barcode,
+                CategoryId = categoryId
+            };
         }
 
         public void SqlClauseExample()

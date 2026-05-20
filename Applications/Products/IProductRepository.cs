@@ -13,5 +13,9 @@ namespace Applications.Products
         public List<Product> Get(decimal price);
 
         List<ProductFullModel> GetFullModel();
+
+        List<SpProductFullModel> StoreProcedureExample();
+
+        Product StoreProcedureInsertExample(string name, decimal price, string barcode, int categoryId);
     }
 }

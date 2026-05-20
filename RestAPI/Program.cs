@@ -17,6 +17,7 @@ using Presentation.API.Endpoints.VersionExamples;
 using Presentation.API.Endpoints.WeatherForecast;
 using Presentation.API.ExceptionHandler;
 using Presentation.API.Extensions;
+using Presentation.API.Middleware;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +57,7 @@ builder.Services.AddHttpClient("webapplication2-api", client =>
 
 var app = builder.Build();
 
+app.UseMiddleware<LogScopeMiddleware>();
 app.MapDefaultEndpoints();
 
 app.AddExceptionHandlerEndpoints();

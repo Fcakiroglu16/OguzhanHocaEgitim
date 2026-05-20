@@ -26,6 +26,36 @@ namespace Persistences.EntityConfiguration
             builder.Property(x => x.Barcode).HasColumnName("Barcode").IsFixedLength().HasMaxLength(10);
 
 
+            //CREATE PROCEDURE usp_InsertProduct
+            //    @Name       NVARCHAR(100),
+            //@Price      DECIMAL(18, 2),
+            //@Barcode NCHAR(10),
+            //@CategoryId INT,
+            //    @NewId      INT OUTPUT
+            //AS
+            //    BEGIN
+            //SET NOCOUNT ON;
+
+            //INSERT INTO Products(Name, Price, Barcode, CategoryId)
+            //VALUES(@Name, @Price, @Barcode, @CategoryId);
+
+            //SET @NewId = SCOPE_IDENTITY();
+
+            //END
+
+
+            builder.InsertUsingStoredProcedure("usp_InsertProduct", sp =>
+            {
+                sp.HasParameter(p => p.Name, x => x.HasName("Name"));
+
+                sp.HasParameter(p => p.Price, x => x.HasName("Price"));
+                sp.HasParameter(p => p.Barcode, x => x.HasName("Barcode"));
+                sp.HasParameter(p => p.CategoryId, x => x.HasName("CategoryId"));
+
+                sp.HasParameter(p => p.Id, x => x.HasName("NewId").IsOutput());
+            });
+
+
             builder.HasOne(p => p.Category).WithMany(c => c.Products).HasForeignKey(p => p.CategoryId);
 
 

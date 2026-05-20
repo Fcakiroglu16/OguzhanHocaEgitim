@@ -48,7 +48,10 @@ namespace Applications.Products
 
         public ServiceResult<List<ProductDto>> GetAll()
         {
-            var FullProductModel = productRepository.GetFullModel();
+            logger.LogInformation("Fetching all products.");
+
+
+            // var SpProductResult = productRepository.StoreProcedureExample();
 
 
             var productList = productRepository.GetAll();
@@ -183,6 +186,18 @@ namespace Applications.Products
 
         public ServiceResult<CreateProductResponse> Create(CreateProductRequest request)
         {
+            #region Insert Store Procedure Example
+
+            //var newProduct = productRepository.StoreProcedureInsertExample(request.Name, request.Price!.Value,
+            //    GenerateBarcode(), request.CategoryId);
+
+
+            //return ServiceResult<CreateProductResponse>.Success(new CreateProductResponse(newProduct.Id),
+            //    HttpStatusCode.Created); 
+
+            #endregion
+
+
             var existProduct = productRepository.Exist(p => p.Name == request.Name);
 
 
@@ -196,7 +211,8 @@ namespace Applications.Products
             {
                 Name = request.Name,
                 Price = request.Price!.Value,
-                Barcode = GenerateBarcode()
+                Barcode = GenerateBarcode(),
+                CategoryId = request.CategoryId
             };
 
             var createdProduct = productRepository.Add(newProduct);
