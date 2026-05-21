@@ -10,6 +10,9 @@
   <Folder Name="/Learning/">
     <Project Path="LearningCsharp/LearningCsharp.csproj" Id="e909a961-b883-4ac3-a5c0-ae7862b710ba" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="ReadMe.txt" />
+  </Folder>
   <Project Path="OguzhanHocaEgitim.AppHost/OguzhanHocaEgitim.AppHost.csproj" Id="d0309588-2bf4-4a33-9d92-c85063601d28" />
   <Project Path="OguzhanHocaEgitim.ServiceDefaults/OguzhanHocaEgitim.ServiceDefaults.csproj" />
 </Solution>

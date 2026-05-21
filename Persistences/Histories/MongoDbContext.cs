@@ -8,19 +8,6 @@ namespace Persistences.Histories
 {
     //  1 kalem 1 1000  2  abc
     //  1 kalem 2 1000 2 abc
-    public class History
-    {
-        public string TableName { get; set; } = null!;
-
-
-        public string OldRow { get; set; } = null!;
-
-        public string NewRow { get; set; } = null!;
-
-        public DateTime CreatedDate { get; set; }
-
-        public int UserId { get; set; }
-    }
 
 
     public class MongoDbContext(DbContextOptions<MongoDbContext> options) : DbContext(options)

@@ -217,6 +217,8 @@ namespace Applications.Products
 
             var createdProduct = productRepository.Add(newProduct);
 
+
+            unitOfWork.Commit();
             return ServiceResult<CreateProductResponse>.Success(new CreateProductResponse(createdProduct.Id),
                 HttpStatusCode.Created);
         }
