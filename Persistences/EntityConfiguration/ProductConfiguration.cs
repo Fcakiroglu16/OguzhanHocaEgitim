@@ -44,16 +44,16 @@ namespace Persistences.EntityConfiguration
             //END
 
 
-            //builder.InsertUsingStoredProcedure("usp_InsertProduct", sp =>
-            //{
-            //    sp.HasParameter(p => p.Name, x => x.HasName("Name"));
+            builder.InsertUsingStoredProcedure("usp_InsertProduct", sp =>
+            {
+                sp.HasParameter(p => p.Name, x => x.HasName("Name"));
 
-            //    sp.HasParameter(p => p.Price, x => x.HasName("Price"));
-            //    sp.HasParameter(p => p.Barcode, x => x.HasName("Barcode"));
-            //    sp.HasParameter(p => p.CategoryId, x => x.HasName("CategoryId"));
+                sp.HasParameter(p => p.Price, x => x.HasName("Price"));
+                sp.HasParameter(p => p.Barcode, x => x.HasName("Barcode"));
+                sp.HasParameter(p => p.CategoryId, x => x.HasName("CategoryId"));
 
-            //    sp.HasParameter(p => p.Id, x => x.HasName("NewId").IsOutput());
-            //});
+                sp.HasParameter(p => p.Id, x => x.HasName("NewId").IsOutput());
+            });
 
 
             builder.HasOne(p => p.Category).WithMany(c => c.Products).HasForeignKey(p => p.CategoryId);
