@@ -12,7 +12,7 @@ namespace Domains
         int UserId { get; set; }
     }
 
-    public class Product : IAuditable
+    public class Product
     {
         public int Id { get; set; }
 
@@ -26,11 +26,5 @@ namespace Domains
         public virtual Category Category { get; set; } = null!;
 
         public virtual ProductDetail? ProductDetail { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-
-        public DateTime? UpdatedDate { get; set; }
-
-        public int UserId { get; set; }
     }
 }

@@ -20,14 +20,14 @@ namespace Persistences
             services.AddDbContext<AppDbContext>((sp, options) =>
             {
                 options.UseLazyLoadingProxies();
-                var mongoDbContext = sp.GetRequiredService<MongoDbContext>();
-                var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+                //var mongoDbContext = sp.GetRequiredService<MongoDbContext>();
+                //var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
 
 
-                options.AddInterceptors(new SaveChangesInterceptors(
-                    mongoDbContext,
-                    httpContextAccessor
-                ));
+                //options.AddInterceptors(new SaveChangesInterceptors(
+                //    mongoDbContext,
+                //    httpContextAccessor
+                //));
 
                 options.UseSqlServer(configuration.GetConnectionString("SqlServer"),
                     sqlServerOptions =>
