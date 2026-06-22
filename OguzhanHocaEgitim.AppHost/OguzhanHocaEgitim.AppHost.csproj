@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CacheLesson.API\CacheLesson.API.csproj" />
     <ProjectReference Include="..\RestAPI\Presentation.API.csproj" />
     <ProjectReference Include="..\WebApplication2.API\WebApplication2.API.csproj" />
   </ItemGroup>

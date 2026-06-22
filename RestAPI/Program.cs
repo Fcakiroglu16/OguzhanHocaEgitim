@@ -59,8 +59,6 @@ var app = builder.Build();
 
 app.MapPost("/upload", async (IFormFile file, CancellationToken WritecancellationToken) =>
 {
-
-    
     try
     {
         await File.WriteAllTextAsync("path/to/file.txt", "content", WritecancellationToken);
@@ -70,13 +68,10 @@ app.MapPost("/upload", async (IFormFile file, CancellationToken Writecancellatio
         Console.WriteLine(e);
         throw;
     }
-    catch (Exception ex)
-    {
 
-    }
 
     return Results.Ok();
-}
+});
 
 
 app.UseMiddleware<LogScopeMiddleware>();

@@ -10,4 +10,6 @@ api.WithReference(api2);
 
 api2.WithReference(api);
 
+builder.AddProject<Projects.CacheLesson_API>("cachelesson-api");
+
 builder.Build().Run();

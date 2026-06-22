@@ -12,6 +12,9 @@
   <Folder Name="/Learning/">
     <Project Path="LearningCsharp/LearningCsharp.csproj" Id="e909a961-b883-4ac3-a5c0-ae7862b710ba" />
   </Folder>
+  <Folder Name="/Learning/Cache/">
+    <Project Path="CacheLesson.API/CacheLesson.API.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path="ReadMe.txt" />
   </Folder>
