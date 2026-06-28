@@ -15,6 +15,9 @@
   <Folder Name="/Learning/Cache/">
     <Project Path="CacheLesson.API/CacheLesson.API.csproj" />
   </Folder>
+  <Folder Name="/Learning/Docker/">
+    <Project Path="AppDocker.API/AppDocker.API.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path="ReadMe.txt" />
   </Folder>

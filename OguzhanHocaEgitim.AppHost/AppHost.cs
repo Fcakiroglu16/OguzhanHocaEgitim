@@ -12,4 +12,6 @@ api2.WithReference(api);
 
 builder.AddProject<Projects.CacheLesson_API>("cachelesson-api");
 
+builder.AddProject<Projects.AppDocker_API>("appdocker-api");
+
 builder.Build().Run();
