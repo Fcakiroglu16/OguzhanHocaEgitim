@@ -17,10 +17,15 @@
   </Folder>
   <Folder Name="/Learning/Docker/">
     <Project Path="AppDocker.API/AppDocker.API.csproj" />
+    <Project Path="AppDocker2.API/AppDocker2.API.csproj" />
+    <Project Path="DockerCaching/DockerCaching.csproj" Id="6fdc49db-c4c5-4004-a41e-f3fb9f35f9b6" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path="ReadMe.txt" />
   </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
   <Project Path="OguzhanHocaEgitim.AppHost/OguzhanHocaEgitim.AppHost.csproj" Id="d0309588-2bf4-4a33-9d92-c85063601d28" />
   <Project Path="OguzhanHocaEgitim.ServiceDefaults/OguzhanHocaEgitim.ServiceDefaults.csproj" />
 </Solution>

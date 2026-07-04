@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppDocker.API\AppDocker.API.csproj" />
+    <ProjectReference Include="..\AppDocker2.API\AppDocker2.API.csproj" />
     <ProjectReference Include="..\CacheLesson.API\CacheLesson.API.csproj" />
     <ProjectReference Include="..\RestAPI\Presentation.API.csproj" />
     <ProjectReference Include="..\WebApplication2.API\WebApplication2.API.csproj" />

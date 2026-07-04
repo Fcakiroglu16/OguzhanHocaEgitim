@@ -1,0 +1,13 @@
+services:
+  appdocker.api:
+    image: appdockerapi-image:v1
+    build:
+      context: .
+      dockerfile: AppDocker.API/Dockerfile
+
+  appdocker2.api:
+    image: ${DOCKER_REGISTRY-}appdocker2api
+    build:
+      context: .
+      dockerfile: AppDocker2.API/Dockerfile
+
