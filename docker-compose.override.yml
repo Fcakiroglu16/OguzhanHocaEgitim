@@ -1,10 +1,14 @@
 services:
   appdocker.api:
+    user: root
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings:SqlServer=Server=sqlserver,1433;Database=AppDockerDb;User=Sa;Password=YourStr0ng!Passw0rd;Trusted_Connection=False;TrustServerCertificate=True;Integrated Security=False 
     ports:
       - "5000:8080"
+    volumes:
+    - app_docker_files:/app/wwwroot 
 
   appdocker2.api:
     environment:
@@ -13,9 +17,12 @@ services:
     ports:
       - "5001:8080"
   sqlserver:
+   user: root
    environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=YourStr0ng!Passw0rd
    ports:
       - "1433:1433"
+   volumes:
+    - sql_data:/var/opt/mssql/data
 

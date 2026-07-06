@@ -16,4 +16,7 @@ services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2025-latest
     container_name: sqlserver
+volumes:
+  sql_data:
+  app_docker_files:
    

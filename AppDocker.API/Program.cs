@@ -1,5 +1,6 @@
 using AppDocker.API.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"))
 );
 
+builder.Services.AddSingleton<IFileProvider>(serviceProvider =>
+{
+    var environment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
+    var filesPath = Path.Combine(
+        environment.WebRootPath, "files");
+
+    return new PhysicalFileProvider(filesPath);
+});
+
 
 var app = builder.Build();
 
@@ -25,28 +35,45 @@ if (app.Environment.IsDevelopment())
 app.MapOpenApi();
 app.MapScalarApiReference();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseStaticFiles();
 
-app.MapGet("/weatherforecast", () =>
+
+app.MapGet("/api/products", (AppDbContext context) => { return Results.Ok(context.Products.ToList()); });
+
+
+app.MapPost("/api/upload", async (IFormFile file, IFileProvider fileProvider, CancellationToken cancellationToken) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    if (file.Length == 0)
+    {
+        return Results.BadRequest("Dosya boş olamaz.");
+    }
+
+    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+    var physicalPath = fileProvider.GetFileInfo(fileName).PhysicalPath;
+
+    if (string.IsNullOrEmpty(physicalPath))
+    {
+        return Results.Problem("Dosyanın kaydedileceği yol çözümlenemedi.");
+    }
+
+    await using var fileStream = new FileStream(physicalPath, FileMode.Create);
+
+
+    try
+    {
+        await file.CopyToAsync(fileStream, cancellationToken);
+    }
+    catch (OperationCanceledException e)
+    {
+        Console.WriteLine(e);
+        throw;
+    }
+
+
+    return Results.Created($"/files/{fileName}", new { fileName });
+}).DisableAntiforgery();
+
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+
