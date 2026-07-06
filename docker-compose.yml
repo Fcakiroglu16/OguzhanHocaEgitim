@@ -1,13 +1,19 @@
 services:
   appdocker.api:
     image: appdockerapi-image:v1
+    container_name: "appdocker.api"
     build:
       context: .
       dockerfile: AppDocker.API/Dockerfile
 
   appdocker2.api:
-    image: ${DOCKER_REGISTRY-}appdocker2api
+    image: appdocker2api-image:v1
+    container_name: "appdocker2.api"
     build:
       context: .
       dockerfile: AppDocker2.API/Dockerfile
 
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    container_name: sqlserver
+   
