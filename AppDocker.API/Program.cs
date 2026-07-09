@@ -14,9 +14,12 @@ builder.AddServiceDefaults();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"))
-);
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"))
+//);
+
+builder.AddSqlServerDbContext<AppDbContext>("sqlSever");
+
 
 builder.Services.AddSingleton<IFileProvider>(serviceProvider =>
 {
@@ -30,15 +33,13 @@ builder.Services.AddSingleton<IFileProvider>(serviceProvider =>
 
 builder.Services.AddDistributedMemoryCache();
 
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "cache-lesson-";
-});
+
+builder.AddRedisDistributedCache("redis");
 
 builder.Services.AddHttpClient<AppDocker2Service>(options =>
 {
-    options.BaseAddress = new Uri(builder.Configuration["Microservices:AppDocker2"]!);
+    // "appdocker2-api" matches the resource name registered in AppHost.cs and is resolved via Aspire service discovery.
+    options.BaseAddress = new Uri("http://appdocker2-api");
 });
 
 

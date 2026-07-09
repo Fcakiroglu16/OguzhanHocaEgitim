@@ -1,4 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.2.4">
+<Project Sdk="Aspire.AppHost.Sdk/13.4.6">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,6 +7,11 @@
     <Nullable>enable</Nullable>
     <UserSecretsId>81259383-51b6-45bf-914a-bb03c49add4f</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.Redis" Version="13.4.6" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="13.4.6" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AppDocker.API\AppDocker.API.csproj" />

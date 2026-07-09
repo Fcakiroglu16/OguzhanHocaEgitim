@@ -6,7 +6,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings:SqlServer=Server=sqlserver,1433;Database=AppDockerDb;User=Sa;Password=YourStr0ng!Passw0rd;Trusted_Connection=False;TrustServerCertificate=True;Integrated Security=False
       - ConnectionStrings:Redis=redis:6379,password=YourStr0ng!Passw0rd
-      - Microservices:AppDocker2=http://appdocker2.api:8080
+      - services__appdocker2-api__http__0=http://appdocker2.api:8080
     ports:
       - "5000:8080"
     volumes:
