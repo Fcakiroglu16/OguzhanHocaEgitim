@@ -1,9 +1,13 @@
 using AppDocker.API.Data;
+using AppDocker.API.Service;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.FileProviders;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 
 // Add services to the container.
@@ -24,7 +28,23 @@ builder.Services.AddSingleton<IFileProvider>(serviceProvider =>
 });
 
 
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "cache-lesson-";
+});
+
+builder.Services.AddHttpClient<AppDocker2Service>(options =>
+{
+    options.BaseAddress = new Uri(builder.Configuration["Microservices:AppDocker2"]!);
+});
+
+
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 
 // Configure the HTTP request pipeline.
@@ -36,6 +56,21 @@ app.MapOpenApi();
 app.MapScalarApiReference();
 
 app.UseStaticFiles();
+
+
+app.MapGet("/check-test", async (AppDocker2Service appDocker2Service) =>
+{
+    var result = await appDocker2Service.CheckTest();
+    return Results.Ok(result);
+});
+
+
+app.MapGet("/api/cache-test", (IDistributedCache distributedCache) =>
+{
+    distributedCache.SetString("x", "y");
+
+    return Results.Ok();
+});
 
 
 app.MapGet("/api/products", (AppDbContext context) => { return Results.Ok(context.Products.ToList()); });

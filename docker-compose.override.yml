@@ -4,18 +4,26 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings:SqlServer=Server=sqlserver,1433;Database=AppDockerDb;User=Sa;Password=YourStr0ng!Passw0rd;Trusted_Connection=False;TrustServerCertificate=True;Integrated Security=False 
+      - ConnectionStrings:SqlServer=Server=sqlserver,1433;Database=AppDockerDb;User=Sa;Password=YourStr0ng!Passw0rd;Trusted_Connection=False;TrustServerCertificate=True;Integrated Security=False
+      - ConnectionStrings:Redis=redis:6379,password=YourStr0ng!Passw0rd
+      - Microservices:AppDocker2=http://appdocker2.api:8080
     ports:
       - "5000:8080"
     volumes:
-    - app_docker_files:/app/wwwroot 
-
+    - app_docker_files:/app/wwwroot
+    depends_on:
+    - redis 
+    - sqlserver
+    - appdocker2.api 
   appdocker2.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
     ports:
       - "5001:8080"
+    depends_on:
+    - redis 
+    - sqlserver 
   sqlserver:
    user: root
    environment:
@@ -25,4 +33,12 @@ services:
       - "1433:1433"
    volumes:
     - sql_data:/var/opt/mssql/data
+   depends_on:
+    - redis
+  redis:
+   command: redis-server --save 30 1 --requirepass YourStr0ng!Passw0rd
+   ports:
+      - "6379:6379"
+   volumes:
+      - redis_data:/data
 
