@@ -28,4 +28,5 @@
   </Project>
   <Project Path="OguzhanHocaEgitim.AppHost/OguzhanHocaEgitim.AppHost.csproj" Id="d0309588-2bf4-4a33-9d92-c85063601d28" />
   <Project Path="OguzhanHocaEgitim.ServiceDefaults/OguzhanHocaEgitim.ServiceDefaults.csproj" />
+  <Project Path="QueueSystemConsoleApp/QueueSystemConsoleApp.csproj" />
 </Solution>
