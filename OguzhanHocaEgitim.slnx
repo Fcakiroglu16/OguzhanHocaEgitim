@@ -20,6 +20,9 @@
     <Project Path="AppDocker2.API/AppDocker2.API.csproj" />
     <Project Path="DockerCaching/DockerCaching.csproj" Id="6fdc49db-c4c5-4004-a41e-f3fb9f35f9b6" />
   </Folder>
+  <Folder Name="/RabbitMQ/">
+    <Project Path="RabbitMQApp.API/RabbitMQApp.API.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path="ReadMe.txt" />
   </Folder>

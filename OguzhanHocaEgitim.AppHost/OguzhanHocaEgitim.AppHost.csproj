@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="13.4.6" />
     <PackageReference Include="Aspire.Hosting.Redis" Version="13.4.6" />
     <PackageReference Include="Aspire.Hosting.SqlServer" Version="13.4.6" />
   </ItemGroup>
@@ -16,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AppDocker.API\AppDocker.API.csproj" />
     <ProjectReference Include="..\AppDocker2.API\AppDocker2.API.csproj" />
+    <ProjectReference Include="..\RabbitMQApp.API\RabbitMQApp.API.csproj" />
   </ItemGroup>
 
 </Project>
