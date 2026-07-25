@@ -1,9 +1,13 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var rabbitmqapi = builder.AddProject<Projects.RabbitMQApp_API>("rabbitmqapp-api");
+var api = builder.AddProject<Projects.RabbitMQApp_API>("rabbitmqapp-api");
 
-var rabbitMq = builder.AddRabbitMQ("rabbitmq");
+#pragma warning disable ASPIREPERSISTENCE001
+var rabbitMq = builder.AddRabbitMQ("rabbitmq").WithManagementPlugin()
+    .WithPersistentLifetime();
+#pragma warning restore ASPIREPERSISTENCE001
 
-rabbitmqapi.WithReference(rabbitMq).WaitFor(rabbitMq);
+
+api.WithReference(rabbitMq).WaitFor(rabbitMq);
 
 builder.Build().Run();
