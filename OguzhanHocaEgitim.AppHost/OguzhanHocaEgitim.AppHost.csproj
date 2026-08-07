@@ -18,6 +18,7 @@
     <ProjectReference Include="..\AppDocker.API\AppDocker.API.csproj" />
     <ProjectReference Include="..\AppDocker2.API\AppDocker2.API.csproj" />
     <ProjectReference Include="..\RabbitMQApp.API\RabbitMQApp.API.csproj" />
+    <ProjectReference Include="..\RabbitMqApp.WorkerService\RabbitMqApp.WorkerService.csproj" />
   </ItemGroup>
 
 </Project>
