@@ -9,9 +9,9 @@ public static class ExchangeCreateStarter
         using var scope = web.Services.CreateScope();
         var connection = scope.ServiceProvider.GetRequiredService<IConnection>();
         var channel = await connection.CreateChannelAsync();
-            
-        await channel.ExchangeDeclareAsync("rabbitmq-api.user-created-event.exchange", ExchangeType.Fanout, true,
+
+        await channel.ExchangeDeclareAsync("rabbitmq-api.user-created-event.direct-exchange", ExchangeType.Direct, true,
             false);
     }
-    
+
 }

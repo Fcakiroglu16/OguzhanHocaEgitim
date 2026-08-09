@@ -1,9 +1,9 @@
-using System.Text;
-using System.Text.Json;
 using Polly;
 using Polly.Retry;
 using RabbitMQ.Client;
 using ServiceBusShared;
+using System.Text;
+using System.Text.Json;
 
 namespace RabbitMQApp.API.Services;
 
@@ -67,18 +67,18 @@ public class RabbitMqService(IConnection connection, ILogger<RabbitMqService> lo
         await channel.DisposeAsync();
     }
 
-    
+
     // at-least-once = yes retry = yes ack
     public async Task SendWithAck()
     {
         var channel = await connection.CreateChannelAsync(new CreateChannelOptions(true, true));
-      
+
         channel.BasicReturnAsync += (sender, args) =>
         {
             logger.LogInformation($"Message returned: {args.ReplyText}");
             return Task.CompletedTask;
         };
-        
+
         await channel.ExchangeDeclareAsync("rabbitmq-api.user-created-event.exchange", ExchangeType.Fanout, true,
             false);
 
@@ -119,7 +119,7 @@ public class RabbitMqService(IConnection connection, ILogger<RabbitMqService> lo
 
         await channel.DisposeAsync();
     }
-    
+
     public async Task SendWithNoAck2()
     {
         var channel = await connection.CreateChannelAsync();
@@ -163,4 +163,60 @@ public class RabbitMqService(IConnection connection, ILogger<RabbitMqService> lo
 
 
     }
+
+    public async Task SendWithAckAndDirectExchange()
+    {
+        var channel = await connection.CreateChannelAsync(new CreateChannelOptions(true, true));
+
+        channel.BasicReturnAsync += (sender, args) =>
+        {
+            logger.LogInformation($"Message returned: {args.ReplyText}");
+            return Task.CompletedTask;
+        };
+
+        await channel.ExchangeDeclareAsync("rabbitmq-api.user-created-event.direct-exchange", ExchangeType.Direct, true,
+            false);
+
+
+        var userCreatedEvent = new UserCreatedEvent(
+            Guid.NewGuid().ToString(),
+            "ahmet",
+            "ahmet@outloo.com");
+
+        var userCreatedEventAsJson = JsonSerializer.Serialize(userCreatedEvent);
+
+        var body = Encoding.UTF8.GetBytes(userCreatedEventAsJson);
+
+
+        var retryPipeline = new ResiliencePipelineBuilder()
+            .AddRetry(new RetryStrategyOptions
+            {
+                MaxRetryAttempts = 3,
+                Delay = TimeSpan.FromSeconds(1),
+                BackoffType = DelayBackoffType.Exponential,
+                OnRetry = args =>
+                {
+                    logger.LogWarning(
+                        args.Outcome.Exception,
+                        "BasicPublishAsync failed, retry attempt {AttemptNumber}",
+                        args.AttemptNumber + 1);
+                    return ValueTask.CompletedTask;
+                }
+            })
+            .Build();
+
+        //await retryPipeline.ExecuteAsync(async cancellationToken =>
+        //{
+        //    await channel.BasicPublishAsync("rabbitmq-api.user-created-event.direct-exchange", "type:developer", true, body,
+        //        cancellationToken);
+        //});
+        await retryPipeline.ExecuteAsync(async cancellationToken =>
+        {
+            await channel.BasicPublishAsync("rabbitmq-api.user-created-event.direct-exchange", "type:developer", true, body,
+                cancellationToken);
+        });
+
+        await channel.DisposeAsync();
+    }
+
 }
