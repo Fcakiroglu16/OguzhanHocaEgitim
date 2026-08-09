@@ -1,4 +1,3 @@
-using RabbitMQ.Client;
 using RabbitMQApp.API.Consumers;
 using RabbitMQApp.API.Services;
 using RabbitMQApp.API.Starter;
@@ -10,7 +9,7 @@ builder.AddServiceDefaults();
 builder.AddRabbitMQClient("rabbitmq");
 builder.Services.AddSingleton<RabbitMqService>();
 builder.Services.AddOpenApi();
-builder.Services.AddHostedService<UserCreatedEventConsumerWithNoAck>();
+//builder.Services.AddHostedService<UserCreatedEventConsumerWithNoAck>();
 builder.Services.AddHostedService<UserCreatedEventConsumerWithAck>();
 
 

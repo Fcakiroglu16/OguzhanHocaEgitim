@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var workerService=builder.AddProject<Projects.RabbitMqApp_WorkerService>("rabbitmqapp-workerservice");
+var workerService = builder.AddProject<Projects.RabbitMqApp_WorkerService>("rabbitmqapp-workerservice");
 
 var api = builder.AddProject<Projects.RabbitMQApp_API>("rabbitmqapp-api");
 
@@ -8,8 +8,8 @@ var api = builder.AddProject<Projects.RabbitMQApp_API>("rabbitmqapp-api");
 
 
 
-var rabbitMqUserName=builder.AddParameter("username", "guest");
-var rabbitMqPassword=builder.AddParameter("password", "Password12*");
+var rabbitMqUserName = builder.AddParameter("username", "guest");
+var rabbitMqPassword = builder.AddParameter("password", "Password12*");
 
 
 #pragma warning disable ASPIREPERSISTENCE001
@@ -20,7 +20,7 @@ var rabbitMq = builder.AddRabbitMQ("rabbitmq", rabbitMqUserName, rabbitMqPasswor
 
 api.WithReference(rabbitMq).WaitFor(rabbitMq);
 
-workerService.WithReference(rabbitMq).WaitFor(rabbitMq);
+workerService.WithReference(rabbitMq).WaitFor(api);
 
 
 builder.Build().Run();
