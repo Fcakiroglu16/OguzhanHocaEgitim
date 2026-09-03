@@ -6,6 +6,15 @@
         "agent",
         "mcp"
       ]
+    },
+    "rider": {
+      "command": "/Users/fcakiroglu/Applications/Rider.app/Contents/MacOS/rider",
+      "args": [
+        "stdioMcpServer"
+      ],
+      "env": {
+        "IJ_MCP_SERVER_PORT": "64482"
+      }
     }
   }
 }

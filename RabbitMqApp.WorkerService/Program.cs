@@ -7,5 +7,6 @@ builder.AddRabbitMQClient("rabbitmq");
 
 builder.Services.AddHostedService<UserCreatedEventConsumerWithAck>();
 builder.Services.AddHostedService<UserCreatedEventConsumerWithAckAndDirectExchange>();
+builder.Services.AddHostedService<UserCreatedEventConsumerWithAckAndTopicExchange>();
 var host = builder.Build();
 host.Run();

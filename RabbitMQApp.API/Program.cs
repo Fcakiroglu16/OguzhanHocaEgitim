@@ -34,7 +34,7 @@ app.MapGet("/send-with-no-ack", async (RabbitMqService rabbitMqService) =>
 });
 app.MapGet("/send-with-ack", async (RabbitMqService rabbitMqService) =>
 {
-    await rabbitMqService.SendWithAckAndDirectExchange();
+    await rabbitMqService.SendWithAckAndTopicExchangeWithHeader();
 
     return Results.Ok();
 });

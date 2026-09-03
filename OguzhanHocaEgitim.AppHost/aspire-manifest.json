@@ -1,0 +1,105 @@
+{
+  "resources": {
+    "rabbitmqapp-workerservice": {
+      "type": "project.v0",
+      "path": "../RabbitMqApp.WorkerService/RabbitMqApp.WorkerService.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
+        "ConnectionStrings__rabbitmq": "{rabbitmq.connectionString}",
+        "RABBITMQ_HOST": "{rabbitmq.bindings.tcp.host}",
+        "RABBITMQ_PORT": "{rabbitmq.bindings.tcp.port}",
+        "RABBITMQ_USERNAME": "{username.value}",
+        "RABBITMQ_PASSWORD": "{password.value}",
+        "RABBITMQ_URI": "amqp://{username-uri-encoded.value}:{password-uri-encoded.value}@{rabbitmq.bindings.tcp.host}:{rabbitmq.bindings.tcp.port}"
+      }
+    },
+    "rabbitmqapp-api": {
+      "type": "project.v0",
+      "path": "../RabbitMQApp.API/RabbitMQApp.API.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
+        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true",
+        "HTTP_PORTS": "{rabbitmqapp-api.bindings.http.targetPort}",
+        "ConnectionStrings__rabbitmq": "{rabbitmq.connectionString}",
+        "RABBITMQ_HOST": "{rabbitmq.bindings.tcp.host}",
+        "RABBITMQ_PORT": "{rabbitmq.bindings.tcp.port}",
+        "RABBITMQ_USERNAME": "{username.value}",
+        "RABBITMQ_PASSWORD": "{password.value}",
+        "RABBITMQ_URI": "amqp://{username-uri-encoded.value}:{password-uri-encoded.value}@{rabbitmq.bindings.tcp.host}:{rabbitmq.bindings.tcp.port}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    },
+    "username": {
+      "type": "parameter.v0",
+      "value": "{username.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "username-uri-encoded": {
+      "type": "annotated.string",
+      "value": "{username.value}",
+      "filter": "uri"
+    },
+    "password": {
+      "type": "parameter.v0",
+      "value": "{password.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "password-uri-encoded": {
+      "type": "annotated.string",
+      "value": "{password.value}",
+      "filter": "uri"
+    },
+    "rabbitmq": {
+      "type": "container.v0",
+      "connectionString": "amqp://{username-uri-encoded-1.value}:{password-uri-encoded-1.value}@{rabbitmq.bindings.tcp.host}:{rabbitmq.bindings.tcp.port}",
+      "image": "docker.io/library/rabbitmq:4.3-management",
+      "env": {
+        "RABBITMQ_DEFAULT_USER": "{username.value}",
+        "RABBITMQ_DEFAULT_PASS": "{password.value}"
+      },
+      "bindings": {
+        "tcp": {
+          "scheme": "tcp",
+          "protocol": "tcp",
+          "transport": "tcp",
+          "targetPort": 5672
+        },
+        "management": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "targetPort": 15672
+        }
+      }
+    },
+    "password-uri-encoded-1": {
+      "type": "annotated.string",
+      "value": "{password.value}",
+      "filter": "uri"
+    },
+    "username-uri-encoded-1": {
+      "type": "annotated.string",
+      "value": "{username.value}",
+      "filter": "uri"
+    }
+  }
+}

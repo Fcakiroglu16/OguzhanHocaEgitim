@@ -28,6 +28,11 @@ public class UserCreatedEventConsumerWithNoAck(IConnection connection,ILogger<Us
     {
         var channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken);
 
+        // exchange must exist before binding; declare is idempotent and must match the publisher
+        await channel.ExchangeDeclareAsync("rabbitmq-api.user-created-event.exchange", ExchangeType.Fanout, true,
+            false, cancellationToken: stoppingToken);
+
+
         // queue name =>  <microservice-name>.<queue-name>.<message-type>
         await channel.QueueDeclareAsync("rabbitmq-api.user-created-event.queue", true, false, false,
             cancellationToken:
