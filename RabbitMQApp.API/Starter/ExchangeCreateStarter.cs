@@ -12,6 +12,9 @@ public static class ExchangeCreateStarter
 
         await channel.ExchangeDeclareAsync("rabbitmq-api.user-created-event.direct-exchange", ExchangeType.Direct, true,
             false);
+
+        await channel.ExchangeDeclareAsync("rabbitmq-api.user-created-event.header-exchange", ExchangeType.Headers,
+            true, false);
     }
 
 }

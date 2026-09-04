@@ -39,4 +39,18 @@ app.MapGet("/send-with-ack", async (RabbitMqService rabbitMqService) =>
     return Results.Ok();
 });
 
+// ornek: /send-with-header-exchange?format=pdf  => consumer alir
+//        /send-with-header-exchange?format=excel => eslesme yok, mesaj geri doner
+app.MapGet("/send-with-header-exchange", async (RabbitMqService rabbitMqService, string format = "pdf") =>
+{
+    await rabbitMqService.SendWithAckAndHeaderExchange(format);
+
+    return Results.Ok();
+});
+app.MapGet("/send-with-dead-letter-exchange", async (RabbitMqService rabbitMqService, string format = "pdf") =>
+{
+    await rabbitMqService.SendWithAckAndDeadLetterExchange();
+
+    return Results.Ok();
+});
 app.Run();

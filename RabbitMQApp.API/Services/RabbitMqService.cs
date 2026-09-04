@@ -341,4 +341,95 @@ public class RabbitMqService(IConnection connection, ILogger<RabbitMqService> lo
 
         await channel.DisposeAsync();
     }
+
+    // Headers Exchange => routing key kullanilmaz, mesajin header'larina bakilarak yonlendirilir.
+    // Bu ornek: header'da format=pdf olan mesajlari gonderir.
+    public async Task SendWithAckAndHeaderExchange(string format)
+    {
+        var channel = await connection.CreateChannelAsync(new CreateChannelOptions(true, true));
+
+        channel.BasicReturnAsync += (sender, args) =>
+        {
+            // header eslesmezse (ornegin format=excel) hicbir kuyruga gitmez ve mesaj geri doner
+            logger.LogInformation($"Message returned: {args.ReplyText}");
+            return Task.CompletedTask;
+        };
+
+        await channel.ExchangeDeclareAsync("rabbitmq-api.user-created-event.header-exchange", ExchangeType.Headers,
+            true, false);
+
+
+        var userCreatedEvent = new UserCreatedEvent(
+            Guid.NewGuid().ToString(),
+            "ahmet",
+            "ahmet@outloo.com");
+
+        var properties = new BasicProperties
+        {
+            Persistent = true,
+            Headers = new Dictionary<string, object>
+            {
+                { "format", format },
+                {"x","y"}
+            }!
+        };
+
+        var userCreatedEventAsJson = JsonSerializer.Serialize(userCreatedEvent);
+
+        var body = Encoding.UTF8.GetBytes(userCreatedEventAsJson);
+
+        // headers exchange'de routing key onemsizdir, bos gecilir
+        await channel.BasicPublishAsync("rabbitmq-api.user-created-event.header-exchange", string.Empty, true,
+            properties, body);
+
+        await channel.DisposeAsync();
+    }
+    
+    
+    
+    public async Task SendWithAckAndDeadLetterExchange()
+    {
+        var channel = await connection.CreateChannelAsync(new CreateChannelOptions(true, true));
+        await channel.ExchangeDeclareAsync("rabbitmq-api.user-created-event.exchange", ExchangeType.Fanout, true,
+            false);
+
+
+        var userCreatedEvent = new UserCreatedEvent(
+            Guid.NewGuid().ToString(),
+            "ahmet",
+            "ahmet@outloo.com");
+
+        var userCreatedEventAsJson = JsonSerializer.Serialize(userCreatedEvent);
+
+        var body = Encoding.UTF8.GetBytes(userCreatedEventAsJson);
+
+
+        var retryPipeline = new ResiliencePipelineBuilder()
+            .AddRetry(new RetryStrategyOptions
+            {
+                MaxRetryAttempts = 3,
+                Delay = TimeSpan.FromSeconds(1),
+                BackoffType = DelayBackoffType.Exponential,
+                OnRetry = args =>
+                {
+                    logger.LogWarning(
+                        args.Outcome.Exception,
+                        "BasicPublishAsync failed, retry attempt {AttemptNumber}",
+                        args.AttemptNumber + 1);
+                    return ValueTask.CompletedTask;
+                }
+            })
+            .Build();
+
+        await retryPipeline.ExecuteAsync(async cancellationToken =>
+        {
+            await channel.BasicPublishAsync("rabbitmq-api.user-created-event.exchange", string.Empty, false, body,
+                cancellationToken);
+        });
+
+
+        await channel.DisposeAsync();
+    }
+    
+    
 }

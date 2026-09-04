@@ -12,7 +12,10 @@ var rabbitMqPassword = builder.AddParameter("password", "Password12*");
 
 
 #pragma warning disable ASPIREPERSISTENCE001
-var rabbitMq = builder.AddRabbitMQ("rabbitmq", rabbitMqUserName, rabbitMqPassword).WithManagementPlugin()
+var rabbitMq = builder.AddRabbitMQ("rabbitmq", rabbitMqUserName, rabbitMqPassword)
+    .WithManagementPlugin()
+    // .WithEndpoint(port: 6672, targetPort: 5672, name: "amqp")
+    // .WithEndpoint(port: 25672, targetPort: 15672, name: "management")
     .WithPersistentLifetime();
 #pragma warning restore ASPIREPERSISTENCE001
 
