@@ -1,0 +1,6 @@
+@IdentityProxy.API_HostAddress = http://localhost:5097
+
+GET {{IdentityProxy.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
