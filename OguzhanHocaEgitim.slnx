@@ -2,6 +2,8 @@
   <Project Path="Discount.API/Discount.API.csproj" />
   <Project Path="Exchange.API/Exchange.API.csproj" />
   <Project Path="IdentityProxy.API/IdentityProxy.API.csproj" />
+  <Project Path="OguzhanHocaEgitim.AppHost/OguzhanHocaEgitim.AppHost.csproj" />
+  <Project Path="OguzhanHocaEgitim.ServiceDefaults/OguzhanHocaEgitim.ServiceDefaults.csproj" />
   <Project Path="Weather.API/Weather.API.csproj" />
   <Project Path="Web/Web.csproj" />
 </Solution>
